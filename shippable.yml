@@ -1,21 +1,13 @@
 language: python
-build_image: drydock/u14pyt:prod
+
 python:
   - 2.7
 
-install:
-  - pip install -r requirements.txt
-
-# Make folders for the reports
-before_script:
-  - mkdir -p shippable/testresults
-  - mkdir -p shippable/codecoverage
-
-script:
-  - which python
-  - coverage run `which nosetests` test.py --with-xunit --xunit-file=shippable/testresults/nosetests.xml
-  - coverage xml -o shippable/codecoverage/coverage.xml
-
-notifications:
-  email:
-   - ragesh@rageshkrishna.com
+build:
+  ci:
+    - pip install -r requirements.txt
+    - mkdir -p shippable/testresults
+    - mkdir -p shippable/codecoverage
+    - which python
+    - coverage run `which nosetests` test.py --with-xunit --xunit-file=shippable/testresults/nosetests.xml
+    - coverage xml -o shippable/codecoverage/coverage.xml
