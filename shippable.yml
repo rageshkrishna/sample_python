@@ -4,6 +4,14 @@ python:
   - 2.7
 
 build:
+  pre_ci:
+    - docker build -t ragesh/sample_python:latest .
+
+  pre_ci_boot:
+    image_name: ragesh/sample_python
+    image_tag: latest
+    pull: false
+
   ci:
     - pip install -r requirements.txt
     - mkdir -p shippable/testresults
