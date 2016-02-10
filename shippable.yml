@@ -1,21 +1,30 @@
 language: python
 
 python:
-  - 2.7
+  - "3.2"
 
+env:
+ global:
+  - foo=bar
+ matrix:
+  - M1=ONE
+  - M2=two
+
+matrix:
+  allow_failures:
+    - python: "3.2"
+      env: M1=ONE
+    - python: "3.2"
+      env: M2=two
+      
 build:
-#  pre_ci:
-#    - docker build -t ragesh/sample_python:latest .
-
-#  pre_ci_boot:
-#    image_name: ragesh/sample_python
-#    image_tag: latest
-#    pull: false
+  pre_ci_boot:
+    image_name: drydock/u12pyt
+    image_tag: prod
+    pull: true
+    options: '--privileged=true --net=bridge -e FOO=true -e BOO=false'
 
   ci:
     - pip install -r requirements.txt
-    - mkdir -p shippable/testresults
-    - mkdir -p shippable/codecoverage
+    - if [ "$SHIPPABLE_PYTHON_VERSION" == "3.2" ]; then foobar; fi
     - which python
-    - coverage run `which nosetests` test.py --with-xunit --xunit-file=shippable/testresults/nosetests.xml
-    - coverage xml -o shippable/codecoverage/coverage.xml
