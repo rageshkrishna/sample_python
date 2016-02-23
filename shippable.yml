@@ -1,21 +1,17 @@
 language: python
-
+build_image: shippableimages/ubuntu1204_python
 python:
   - 2.7
 
-build:
-#  pre_ci:
-#    - docker build -t ragesh/sample_python:latest .
+install:
+  - pip install -r requirements.txt
 
-#  pre_ci_boot:
-#    image_name: ragesh/sample_python
-#    image_tag: latest
-#    pull: false
+# Make folders for the reports
+before_script:
+  - mkdir -p shippable/testresults
+  - mkdir -p shippable/codecoverage
 
-  ci:
-    - pip install -r requirements.txt
-    - mkdir -p shippable/testresults
-    - mkdir -p shippable/codecoverage
-    - which python
-    - coverage run `which nosetests` test.py --with-xunit --xunit-file=shippable/testresults/nosetests.xml
-    - coverage xml -o shippable/codecoverage/coverage.xml
+script:
+  - which python
+  - coverage run `which nosetests` test.py --with-xunit --xunit-file=shippable/testresults/nosetests.xml
+  - coverage xml -o shippable/codecoverage/coverage.xml
